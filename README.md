@@ -11,6 +11,7 @@ TODO
 Example
 ========
 
+```PHP
     <?php
     
     include_once '../clamd.php';
@@ -40,3 +41,4 @@ Example
     // $clamd->shutdown();
     
     ?>
+```
