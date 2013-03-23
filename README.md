@@ -35,7 +35,7 @@ var_dump($clamd->continueScan(getcwd()));
 var_dump($clamd->streamScan($EICAR_TEST));
 var_dump($clamd->streamScan('PHP'));
 
-if( $clamd->streamScan($EICAR_TEST) == "OK\n" ) { echo 'Infacted' . PHP_EOL; }
+if( $clamd->streamScan($EICAR_TEST) != 'OK' ) { echo 'Infacted' . PHP_EOL; }
 
 // $clamd->reload();
 // $clamd->shutdown();
