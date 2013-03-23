@@ -15,7 +15,7 @@ define('CLAMD_MAXP', 20000);
 $EICAR_TEST = 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*';
 
 
-/* An abstract that `ClamdPipe` and `ClamdNetwork` will inherit. */
+/* An abstract class that `ClamdPipe` and `ClamdNetwork` will inherit. */
 abstract class ClamdBase {
     
     abstract protected function getSocket();
@@ -32,7 +32,7 @@ abstract class ClamdBase {
         return $return;
     }
     
-    /* `ping` command is used to see whether Clamd is alive or note */
+    /* `ping` command is used to see whether Clamd is alive or not */
     public function ping() {
         $return = $this->sendCommand('PING');
         return strcmp($return, 'PONG') ? true : false;
