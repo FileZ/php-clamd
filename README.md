@@ -1,7 +1,7 @@
 php-clamd v0.1
 ==============
 
-php-clamd is a PHP interface to ClamAV Daemon that allows use to scan files and emails effectively using ClamAV.
+php-clamd is a PHP interface to [ClamAV](http://www.clamav.net/) Daemon that allows use to scan files and emails effectively using ClamAV.
 
 API Reference
 =============
