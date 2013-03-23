@@ -82,7 +82,7 @@ abstract class ClamdBase {
         socket_send($socket, $command, strlen($command), 0);
         socket_recv($socket, $return, CLAMD_MAXP, 0);
 
-        sscanf($return, "PORT %d\n", $port);
+        sscanf($return, 'PORT %d\n', $port);
 
         $stream = socket_create(AF_INET, SOCK_STREAM, 0);
         socket_connect($stream, CLAMD_HOST, $port);
