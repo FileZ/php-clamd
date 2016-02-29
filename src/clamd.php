@@ -34,8 +34,7 @@ abstract class ClamdBase {
     
     /* `ping` command is used to see whether Clamd is alive or not */
     public function ping() {
-        $return = $this->sendCommand('PING');
-        return strcmp($return, 'PONG') ? true : false;
+        return (trim($this->sendCommand('PING')) === 'PONG');
     }
 
     /* `version` is used to receive the version of Clamd */
