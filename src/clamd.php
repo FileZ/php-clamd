@@ -15,6 +15,23 @@ define('CLAMD_MAXP', 20000);
 $EICAR_TEST = 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*';
 
 
+class ClamdSocketException extends Exception {
+    protected $errorCode;
+
+    public function __construct($message, $socketErrorCode) {
+        $this->errorCode = $socketErrorCode;
+        if (!$message) {
+            $message = socket_strerror($this->errorCode);
+        }
+        parent::__construct($message);
+    }
+
+    /* Get socket error (returned from 'socket_last_error') */
+    public function getErrorCode() {
+        return $this->errorCode;
+    }
+}
+
 /* An abstract class that `ClamdPipe` and `ClamdNetwork` will inherit. */
 abstract class ClamdBase {
     
@@ -107,8 +124,20 @@ class ClamdPipe extends ClamdBase {
     }
 
     protected function getSocket() {
-        $socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
-        socket_connect($socket, $this->pip);
+        $socket = @socket_create(AF_UNIX, SOCK_STREAM, 0);
+        if ($socket === FALSE) {
+            throw new ClamdSocketException('', socket_last_error());
+        }
+        $hasError = @socket_connect($socket, $this->pip);
+        if ($hasError === FALSE) {
+            $errorCode = socket_last_error();
+            $errorMessage = socket_strerror($errorCode);
+            if ($errorCode === 2) {
+                // ie. `No such file or directory "/var/run/clamav/clamd.ctl"`
+                $errorMessage .= ' "'.$this->pip.'", Is clamd running and are your user/group permissions configured properly?';
+            }
+            throw new ClamdSocketException($errorMessage, $errorCode);
+        }
         return $socket;
     }
 }
@@ -126,10 +155,14 @@ class ClamdNetwork extends ClamdBase {
     }
 
     protected function getSocket() {
-        $socket = socket_create(AF_INET, SOCK_STREAM, 0);
-        socket_connect($socket, $this->host, $this->port);
+        $socket = @socket_create(AF_INET, SOCK_STREAM, 0);
+        if ($socket === FALSE) {
+            throw new ClamdSocketException('', socket_last_error());
+        }
+        $hasError = @socket_connect($socket, $this->host, $this->port);
+        if ($hasError === FALSE) {
+            throw new ClamdSocketException('', socket_last_error());
+        }
         return $socket;
     }
 }
-
-?>
